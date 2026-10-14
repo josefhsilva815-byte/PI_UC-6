@@ -1,21 +1,43 @@
 export class Estoque {
-    #itens = new Map();
+    #estoque = new Map()
 
-    cadastrarltem(id, data) {
-        this.#itens.set(id, data)
+    constructor(tableName) {
+        let index = 0;
+        while (this.#estoque.size < tableName.length) {
+            this.#estoque.set(tableName[index], new Map());
+            index++
+        }
     }
+
+    cadastrarltem(tipo, data) {
+        const table = this.#estoque.get(tipo);
+        const codigo = `${tipo}-${data.id < 100 ? 0 : ""}${data.id < 10 ? 0 : ""}${data.id}`;
+        table.set(codigo, data)
+    }
+
     consultarEstoque() { // Estoque todo
-        return [...this.#itens]
+        const estoque = [];
+        for(const [key, value] of this.#estoque) {
+            estoque.push(...value)
+            // estoque[key].push(...value);
+        }
+        return estoque
     }
+
     buscarltemPorID(id) {
-        return this.#itens.get(id)
+        const tipo = id.split('-')[0];
+        const table = this.#estoque.get(tipo);
+        return table.get(id)
     }
     buscarltemPorNome(nome) {
-        let item = '';
-        this.#itens.forEach((value, key) => {
-            if(value.nome === nome) item = value; 
-        });
-        return item
+        const resultado = {};
+        for(const [key, value] of this.#estoque) {
+            value.forEach((data, id) => {
+                resultado[data.nome.toLowerCase()] = {...data};
+            })
+        }
+
+        return resultado[nome.toLowerCase()]
     }
     gerarRelatorio() { } // Estoque todo com formatação
     filtrarProdutosVencidos() { }
