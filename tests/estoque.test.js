@@ -79,7 +79,7 @@ describe("Testes da classe ", () => {
 
         const item1 = new Equipamento(1, "Marreta", 1000, false);
         const item2 = new Produto(2, "Café", 1000, "12/01/2030", 100);
-        
+
         estoque.cadastrarltem("EQP", item1)
         estoque.cadastrarltem("PDT", item2)
 
@@ -88,11 +88,34 @@ describe("Testes da classe ", () => {
             "Nome | Quantidade | Em Uso | Preço | Data de Validade",
             `${item1.nome} | ${item1.quantidade} | ${item1.em_uso} | ${item1.preco || '-'} | ${item1.data_validade || '-'}`,
             `${item2.nome} | ${item2.quantidade} | ${item2.em_uso || '-'} | ${item2.preco} | ${item2.data_validade}`
-        ]);
+        ].join("\n"));
     });
 
     test("Deve ser possível FILTRAR OS PRODUTOS VENCIDOS do estoque", () => {
         const estoque = new Estoque(["EQP", "PDT"]);
+
+        const item1 = new Equipamento(1, "Chave", 1000, false);
+        const item2 = new Equipamento(2, "Martelo", 33, false);
+        const item3 = new Equipamento(3, "Pá", 4400, false);
+        const item4 = new Equipamento(4, "Panela", 222, false);
+
+        const item5 = new Produto(5, "Café", 1000, "11/01/2020", 100);
+        const item6 = new Produto(6, "Açúcar", 1000, "10/01/2030", 100);
+        const item7 = new Produto(7, "Leite", 1000, "02/01/2020", 100);
+        const item8 = new Produto(8, "Chocolate", 1000, "05/01/2030", 100);
+
+        estoque.cadastrarltem("EQP", item1)
+        estoque.cadastrarltem("PDT", item2)
+        estoque.cadastrarltem("PDT", item3)
+        estoque.cadastrarltem("PDT", item4)
+        estoque.cadastrarltem("PDT", item5)
+        estoque.cadastrarltem("PDT", item6)
+        estoque.cadastrarltem("PDT", item7)
+        estoque.cadastrarltem("PDT", item8)
+
+        console.log(estoque.filtrarProdutosVencidos())
+        expect(estoque.filtrarProdutosVencidos().vencidos).toEqual([item5, item7]);
+        expect(estoque.filtrarProdutosVencidos().na_validade).toEqual([item6, item8]);
 
     });
 

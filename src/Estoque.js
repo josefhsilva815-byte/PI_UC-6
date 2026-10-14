@@ -19,7 +19,6 @@ export class Estoque {
         const estoque = [];
         for (const [key, value] of this.#estoque) {
             estoque.push(...value)
-            // estoque[key].push(...value);
         }
         return estoque
     }
@@ -33,25 +32,41 @@ export class Estoque {
         const resultado = [];
         for (const [key, value] of this.#estoque) {
             value.forEach((data, id) => {
-                if(data.nome.toLowerCase() === nome.toLowerCase()) {
-                    resultado.push({...data});
+                if (data.nome.toLowerCase() === nome.toLowerCase()) {
+                    resultado.push({ ...data });
                 }
             })
         }
 
         return resultado
     }
-    gerarRelatorio() {
+    gerarRelatorio() { // Estoque todo com formatação
         const estoque = this.consultarEstoque().map(p => p[1])
         const relatorio = ["Nome | Quantidade | Em Uso | Preço | Data de Validade"];
-        estoque.forEach(item => {relatorio.push(`${item.nome} | ${item.quantidade} | ${item.em_uso ?? '-'} | ${item.preco ?? '-'} | ${item.data_validade ?? '-'}`)})
-        
-        console.log(relatorio.join("\n"))
+        estoque.forEach(item => { relatorio.push(`${item.nome} | ${item.quantidade} | ${item.em_uso ?? '-'} | ${item.preco ?? '-'} | ${item.data_validade ?? '-'}`) })
 
-        return relatorio
-    } // Estoque todo com formatação
-    filtrarProdutosVencidos() { }
-    atualizarProduto(id, newData) { }
-    listarProdutos() { } // Lista só os produtos
-    removerltem(id) { }
+        return relatorio.join("\n")
+    }
+    filtrarProdutosVencidos() {
+        const estoque = this.consultarEstoque().map(p => p[1]);
+        const vencidos = estoque.filter(item => item.data_validade && new Date(item.data_validade) < new Date());
+        const na_validade = estoque.filter(item => item.data_validade && new Date(item.data_validade) > new Date());
+
+        return { vencidos, na_validade }
+    }
+    atualizarProduto(id, newData) {
+        const tipo = id.split('-')[0];
+        const table = this.#estoque.get(tipo);
+        return table.set(id, newData)
+    }
+
+    listarProdutos() { // Lista só os produtos
+        const estoque = this.consultarEstoque().map(p => p[1]);
+        return estoque.filter(item => item.data_validade);
+    }
+    removerltem(id) {
+        const tipo = id.split('-')[0];
+        const table = this.#estoque.get(tipo);
+        table.delete(id)
+    }
 }
