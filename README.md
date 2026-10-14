@@ -127,5 +127,5 @@ A documentação do projeto contempla três representações:
 
 ## Integrantes
 
--   Pedro
--   José
+-   [Pedro](https://github.com/PedroGeovani-qw)
+-   [José](https://github.com/josefhsilva815-byte)
