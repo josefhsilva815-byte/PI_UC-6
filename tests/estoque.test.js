@@ -113,7 +113,6 @@ describe("Testes da classe ", () => {
         estoque.cadastrarltem("PDT", item7)
         estoque.cadastrarltem("PDT", item8)
 
-        console.log(estoque.filtrarProdutosVencidos())
         expect(estoque.filtrarProdutosVencidos().vencidos).toEqual([item5, item7]);
         expect(estoque.filtrarProdutosVencidos().na_validade).toEqual([item6, item8]);
 
@@ -121,17 +120,51 @@ describe("Testes da classe ", () => {
 
     test("Deve ser possível ATUALIZAR UM PRODUTO pelo ID", () => {
         const estoque = new Estoque(["EQP", "PDT"]);
+        const item2 = new Equipamento(2, "Martelo", 33, false);
+        estoque.cadastrarltem("EQP", item2);
 
+        const newItem = new Equipamento(item2.id, "Prego", item2.quantidade, item2.em_uso);
+        estoque.atualizarProduto("EQP-002", newItem)
+
+        expect(estoque.buscarltemPorID("EQP-002")).toEqual(newItem)
     });
 
     test("Deve ser possível LISTAR OS PRODUTOS no estoque", () => {
         const estoque = new Estoque(["EQP", "PDT"]);
 
+        const item1 = new Equipamento(1, "Chave", 1000, false);
+        const item2 = new Equipamento(2, "Martelo", 33, false);
+        const item3 = new Equipamento(3, "Pá", 4400, false);
+        const item4 = new Equipamento(4, "Panela", 222, false);
+
+        const item5 = new Produto(5, "Café", 1000, "11/01/2020", 100);
+        const item6 = new Produto(6, "Açúcar", 1000, "10/01/2030", 100);
+        const item7 = new Produto(7, "Leite", 1000, "02/01/2020", 100);
+        const item8 = new Produto(8, "Chocolate", 1000, "05/01/2030", 100);
+
+        estoque.cadastrarltem("EQP", item1)
+        estoque.cadastrarltem("EQP", item2)
+        estoque.cadastrarltem("EQP", item3)
+        estoque.cadastrarltem("EQP", item4)
+        estoque.cadastrarltem("PDT", item5)
+        estoque.cadastrarltem("PDT", item6)
+        estoque.cadastrarltem("PDT", item7)
+        estoque.cadastrarltem("PDT", item8)
+
+        expect(estoque.listarProdutos()).toEqual([item5, item6, item7, item8]);
     });
 
     test("Deve ser possível REMOVER um item do estoque", () => {
         const estoque = new Estoque(["EQP", "PDT"]);
 
+        const item1 = new Equipamento(1, "Chave", 1000, false);
+        estoque.cadastrarltem("EQP", item1)
+
+        expect(estoque.consultarEstoque()).toEqual([["EQP-001", item1]])
+
+        estoque.removerltem("EQP-001")
+
+        expect(estoque.consultarEstoque()).toEqual([])
     });
 })
 
