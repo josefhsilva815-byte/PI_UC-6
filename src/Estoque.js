@@ -17,7 +17,7 @@ export class Estoque {
 
     consultarEstoque() { // Estoque todo
         const estoque = [];
-        for(const [key, value] of this.#estoque) {
+        for (const [key, value] of this.#estoque) {
             estoque.push(...value)
             // estoque[key].push(...value);
         }
@@ -30,16 +30,26 @@ export class Estoque {
         return table.get(id)
     }
     buscarltemPorNome(nome) {
-        const resultado = {};
-        for(const [key, value] of this.#estoque) {
+        const resultado = [];
+        for (const [key, value] of this.#estoque) {
             value.forEach((data, id) => {
-                resultado[data.nome.toLowerCase()] = {...data};
+                if(data.nome.toLowerCase() === nome.toLowerCase()) {
+                    resultado.push({...data});
+                }
             })
         }
 
-        return resultado[nome.toLowerCase()]
+        return resultado
     }
-    gerarRelatorio() { } // Estoque todo com formatação
+    gerarRelatorio() {
+        const estoque = this.consultarEstoque().map(p => p[1])
+        const relatorio = ["Nome | Quantidade | Em Uso | Preço | Data de Validade"];
+        estoque.forEach(item => {relatorio.push(`${item.nome} | ${item.quantidade} | ${item.em_uso ?? '-'} | ${item.preco ?? '-'} | ${item.data_validade ?? '-'}`)})
+        
+        console.log(relatorio.join("\n"))
+
+        return relatorio
+    } // Estoque todo com formatação
     filtrarProdutosVencidos() { }
     atualizarProduto(id, newData) { }
     listarProdutos() { } // Lista só os produtos

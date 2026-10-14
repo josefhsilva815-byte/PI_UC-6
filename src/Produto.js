@@ -8,7 +8,7 @@ export class Produto extends Item {
 
 
         super(id, nome, quantidade)
-        this.data_validade = new Date(data_validade)
+        this.data_validade = new Date(data_validade).toISOString().split("T")[0]
         this.preco = preco
     }
     calcSubTotal(quantidade){
